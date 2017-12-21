@@ -18,7 +18,6 @@ package com.sublime.dragplayer.view.transformer;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.nineoldandroids.view.ViewHelper;
 
 /**
  * Abstract class created to be implemented by different classes are going to change the size of a
@@ -137,7 +136,7 @@ public abstract class Transformer {
 
   public boolean isAboveTheMiddle() {
     int parentHeight = parent.getHeight();
-    float viewYPosition = ViewHelper.getY(view) + (view.getHeight() * 0.5f);
+    float viewYPosition = view.getY() + (view.getHeight() * 0.5f);
     return viewYPosition < (parentHeight * 0.5);
   }
 

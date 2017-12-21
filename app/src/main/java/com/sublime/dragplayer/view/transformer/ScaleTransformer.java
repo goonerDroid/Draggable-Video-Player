@@ -17,7 +17,6 @@ package com.sublime.dragplayer.view.transformer;
 
 import android.view.View;
 
-import com.nineoldandroids.view.ViewHelper;
 
 /**
  * Transformer extension created to scale the view instead of resize it as the other
@@ -38,8 +37,8 @@ class ScaleTransformer extends Transformer {
    * @param verticalDragOffset used to calculate the new scale.
    */
   @Override public void updateScale(float verticalDragOffset) {
-    ViewHelper.setScaleX(getView(), 1 - verticalDragOffset / getXScaleFactor());
-    ViewHelper.setScaleY(getView(), 1 - verticalDragOffset / getYScaleFactor());
+    getView().setScaleX(1 - verticalDragOffset / getXScaleFactor());
+    getView().setScaleY(1 - verticalDragOffset / getYScaleFactor());
   }
 
   /**
@@ -48,8 +47,8 @@ class ScaleTransformer extends Transformer {
    * @param verticalDragOffset used to calculate the new position.
    */
   @Override public void updatePosition(float verticalDragOffset) {
-    ViewHelper.setPivotX(getView(), getView().getWidth() - getMarginRight());
-    ViewHelper.setPivotY(getView(), getView().getHeight() - getMarginBottom());
+    getView().setPivotX(getView().getWidth() - getMarginRight());
+    getView().setPivotY(getView().getHeight() - getMarginBottom());
   }
 
   /**
