@@ -33,8 +33,10 @@ public class MovieTrailerFragment extends Fragment {
     TextView movieYear;
     @BindView(R.id.video_view)
     VideoView videoView;
-    @BindView(R.id.iv_media_control)
-    ImageView ivMediaControl;
+    @BindView(R.id.iv_play)
+    ImageView ivPlay;
+    @BindView(R.id.iv_pause)
+    ImageView ivPause;
     @BindView(R.id.fl_media_control_container)
     FrameLayout mediaControlContainer;
 
@@ -77,33 +79,33 @@ public class MovieTrailerFragment extends Fragment {
         }, 2800);
     }
 
-    /**
-     * Pause the VideoView content.
-     */
+
     public void pauseVideo() {
         if (videoView.isPlaying()) {
             videoView.pause();
         }
     }
 
-    /**
-     * Resume the VideoView content.
-     */
+
     public void startVideo() {
         if (!videoView.isPlaying()) {
             videoView.start();
         }
     }
 
-    @OnClick(R.id.iv_media_control)
-    public void onMediaClick(){
-        if (videoView.isPlaying()) {
-            ivMediaControl.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_pause_white_36dp));
-            videoView.pause();
-            return;
-        }
-        ivMediaControl.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play_arrow_white_36dp));
+    @OnClick(R.id.iv_play)
+    public void onMediaPlayClick(){
+        ivPlay.setVisibility(View.INVISIBLE);
+        ivPause.setVisibility(View.VISIBLE);
         videoView.start();
+    }
+
+
+    @OnClick(R.id.iv_pause)
+    public void onMediaPauseClick(){
+        ivPause.setVisibility(View.INVISIBLE);
+        ivPlay.setVisibility(View.VISIBLE);
+        videoView.pause();
     }
 
     @OnClick(R.id.rl_video_container)
@@ -116,11 +118,5 @@ public class MovieTrailerFragment extends Fragment {
                 }
             }, 1800);
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        pauseVideo();
     }
 }

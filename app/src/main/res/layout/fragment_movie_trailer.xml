@@ -26,16 +26,23 @@
             android:id="@+id/fl_media_control_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#66000000"
-            android:layout_centerInParent="true">
+            android:background="#66000000">
 
 
             <ImageView
-                android:id="@+id/iv_media_control"
+                android:id="@+id/iv_pause"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_pause_white_36dp"/>
+
+            <ImageView
+                android:id="@+id/iv_play"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:src="@drawable/ic_play_arrow_white_36dp"/>
 
 
         </FrameLayout>
