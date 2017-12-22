@@ -14,13 +14,15 @@ public class Movie implements Parcelable{
     private int movieThumbnail;
     private String movieYear;
     private String movieGenre;
+    private String movieTrailer;
 
 
-    public Movie(String movieName,int movieThumbnail,String movieYear,String movieGenre) {
+    public Movie(String movieName,int movieThumbnail,String movieYear,String movieGenre,String movieTrailer) {
         this.movieName = movieName;
         this.movieThumbnail = movieThumbnail;
         this.movieYear = movieYear;
         this.movieGenre = movieGenre;
+        this.movieTrailer = movieTrailer;
     }
 
     private Movie(Parcel parcel) {
@@ -28,6 +30,7 @@ public class Movie implements Parcelable{
         movieThumbnail = parcel.readInt();
         movieYear = parcel.readString();
         movieGenre = parcel.readString();
+        movieTrailer = parcel.readString();
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>(){
@@ -60,6 +63,9 @@ public class Movie implements Parcelable{
         return movieGenre;
     }
 
+    public String getMovieTrailer() {
+        return movieTrailer;
+    }
 
     @Override
     public int describeContents() {
@@ -72,5 +78,6 @@ public class Movie implements Parcelable{
         parcel.writeInt(movieThumbnail);
         parcel.writeString(movieYear);
         parcel.writeString(movieGenre);
+        parcel.writeString(movieTrailer);
     }
 }

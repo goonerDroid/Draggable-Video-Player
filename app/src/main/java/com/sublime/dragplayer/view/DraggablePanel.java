@@ -23,6 +23,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import com.sublime.dragplayer.R;
+import com.sublime.dragplayer.utils.Timber;
 
 /**
  * Custom view created to handle DraggableView using fragments. With this custom view the client

@@ -1,25 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context="com.sublime.dragplayer.MovieTrailerActivity">
+    android:background="@android:color/white">
 
 
+    <RelativeLayout
+        android:id="@+id/rl_video_container"
+        android:layout_height="240dp"
+        android:background="@android:color/black"
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_thumb"
-        android:layout_width="match_parent"
-        android:scaleType="centerCrop"
-        android:layout_height="240dp" />
+        <VideoView
+            android:id="@+id/video_view"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"/>
+
+
+        <FrameLayout
+            android:id="@+id/fl_media_control_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#66000000"
+            android:layout_centerInParent="true">
+
+
+            <ImageView
+                android:id="@+id/iv_media_control"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_pause_white_36dp"/>
+
+
+        </FrameLayout>
+
+
+    </RelativeLayout>
 
 
     <TextView
         android:id="@+id/tv_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_thumb"
+        android:layout_below="@id/rl_video_container"
         android:layout_alignParentEnd="true"
         android:textColor="#757575"
         android:layout_marginTop="16dp"
@@ -30,7 +59,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_thumb"
+        android:layout_below="@id/rl_video_container"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@id/tv_year"
         android:maxLines="1"

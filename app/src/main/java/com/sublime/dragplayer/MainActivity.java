@@ -28,8 +28,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
 
     private static final String DRAGGABLE_PANEL_STATE = "draggable_panel_state";
     private static final String LAST_LOADED_MOVIE = "last_movie";
+    private static final String APPLICATION_RAW_PATH =
+            "android.resource://com.sublime.dragplayer/";
     private static final int DELAY_MILLIS = 50;
-//    private int lastLoadedPlacePosition;
     private ArrayList<Movie> movieList;
     private MovieTrailerFragment movieTrailerFragment;
     private Movie movie;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         draggablePanel.setFragmentManager(getSupportFragmentManager());
         draggablePanel.setTopFragment(movieTrailerFragment);
         draggablePanel.setBottomFragment(movieDetailFragment);
+        draggablePanel.setClickToMaximizeEnabled(true);
         TypedValue typedValue = new TypedValue();
         getResources().getValue(R.dimen.x_scale_factor, typedValue, true);
         float xScaleFactor = typedValue.getFloat();
@@ -169,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
     }
 
     /**
-     * Keep a reference of the last place loaded.
+     * Keeps a reference of the last place loaded.
      *
      * @param outState Bundle used to store the position.
      */
@@ -178,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
     }
 
     /**
-     * Keep a reference of the last DraggablePanelState.
+     * Keeps a reference of the last DraggablePanelState.
      *
      * @param outState Bundle used to store the DraggablePanelState.
      */
@@ -215,8 +217,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         String movieGenreArray[] = new String[]{"Crime film/Thriller","Drama/Crime","Thriller/Action",
                 "Coming of age/Drama","Crime film/Thriller"};
 
+        String movieTrailer[] = new String[]{APPLICATION_RAW_PATH + R.raw.donnie_brasco,
+                APPLICATION_RAW_PATH + R.raw.godfather,APPLICATION_RAW_PATH + R.raw.scarface,
+                APPLICATION_RAW_PATH + R.raw.scent_of_a_woman,APPLICATION_RAW_PATH + R.raw.serpico};
+
         for (int i = 0 ; i < movieTitleArray.length ; i++){
-            Movie movie = new Movie(movieTitleArray[i],movieThumbArray[i],movieYearArray[i],movieGenreArray[i]);
+            Movie movie = new Movie(movieTitleArray[i],movieThumbArray[i],movieYearArray[i],
+                    movieGenreArray[i],movieTrailer[i]);
             movieList.add(movie);
         }
     }
