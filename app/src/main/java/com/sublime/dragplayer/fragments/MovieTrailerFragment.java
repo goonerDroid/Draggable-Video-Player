@@ -14,6 +14,7 @@ import android.widget.VideoView;
 
 import com.sublime.dragplayer.R;
 import com.sublime.dragplayer.model.Movie;
+import com.sublime.dragplayer.utils.Preferences;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +44,7 @@ public class MovieTrailerFragment extends Fragment {
 
 
     private Context context;
+    private Preferences preferences;
 
 
     @Override
@@ -56,11 +58,13 @@ public class MovieTrailerFragment extends Fragment {
                                        Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_trailer, container, false);
         ButterKnife.bind(this, view);
+        preferences = new Preferences(context);
         return view;
     }
 
 
     public void showFragment(Movie movie){
+        preferences.saveMovieURI(movie.getMovieTrailer());
         movieTitle.setText(movie.getMovieName());
         movieGenre.setText(movie.getMovieGenre());
         movieYear.setText(movie.getMovieYear());
@@ -72,7 +76,6 @@ public class MovieTrailerFragment extends Fragment {
         Uri path = Uri.parse(movieTrailer);
         videoView.setVideoURI(path);
         videoView.start();
-
         mediaControlContainer.postDelayed(new Runnable() {
             public void run() {
                 mediaControlContainer.setVisibility(View.INVISIBLE);
@@ -120,4 +123,11 @@ public class MovieTrailerFragment extends Fragment {
             }, 1800);
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        preferences.saveMovieSeekCount(videoView.getCurrentPosition());
+    }
+
 }

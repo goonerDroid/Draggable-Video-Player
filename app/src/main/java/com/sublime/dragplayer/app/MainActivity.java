@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
 
     }
 
+
     @Override
     public void onBackPressed() {
        if (draggablePanel.isMinimized()){

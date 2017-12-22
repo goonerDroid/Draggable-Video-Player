@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -12,9 +13,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
 import com.sublime.dragplayer.R;
 import com.sublime.dragplayer.app.MainActivity;
+import com.sublime.dragplayer.utils.Preferences;
 
 /**
  * Created by goonerdroid
@@ -46,6 +49,7 @@ public class PlayerService extends Service {
 
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.popup_player_layout, null);
+        initVideo(view);
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -60,6 +64,17 @@ public class PlayerService extends Service {
         setDragListener(view,params);
 
         windowManager.addView(view, params);
+    }
+
+    private void initVideo(View view){
+        Preferences preferences = new Preferences(getApplicationContext());
+        VideoView videoView = view.findViewById(R.id.video_view);
+        Uri path = Uri.parse(preferences.getMovieURI());
+        videoView.setVideoURI(path);
+        if (preferences.getMovieSeekCount() > 0){
+            videoView.seekTo(preferences.getMovieSeekCount());
+        }
+        videoView.start();
     }
 
     private void setDragListener(View view, final WindowManager.LayoutParams params) {
