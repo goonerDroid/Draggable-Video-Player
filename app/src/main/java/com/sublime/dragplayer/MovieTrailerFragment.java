@@ -77,6 +77,24 @@ public class MovieTrailerFragment extends Fragment {
         }, 2800);
     }
 
+    /**
+     * Pause the VideoView content.
+     */
+    public void pauseVideo() {
+        if (videoView.isPlaying()) {
+            videoView.pause();
+        }
+    }
+
+    /**
+     * Resume the VideoView content.
+     */
+    public void startVideo() {
+        if (!videoView.isPlaying()) {
+            videoView.start();
+        }
+    }
+
     @OnClick(R.id.iv_media_control)
     public void onMediaClick(){
         if (videoView.isPlaying()) {
@@ -100,4 +118,9 @@ public class MovieTrailerFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        pauseVideo();
+    }
 }

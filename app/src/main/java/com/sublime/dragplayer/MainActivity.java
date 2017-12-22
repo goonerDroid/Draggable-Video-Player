@@ -12,6 +12,8 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.sublime.dragplayer.adapter.MovieAdapter;
 import com.sublime.dragplayer.model.Movie;
+import com.sublime.dragplayer.utils.Timber;
+import com.sublime.dragplayer.view.DraggableListener;
 import com.sublime.dragplayer.view.DraggablePanel;
 
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         initMovieRecyclerView();
         movieTrailerFragment = new MovieTrailerFragment();
         movieDetailFragment = new MovieDetailFragment();
+        initDraggableViewListener();
         initializeDraggablePanel();
     }
 
@@ -151,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
             case CLOSED_AT_LEFT:
                 handler.postDelayed(new Runnable() {
                     @Override public void run() {
+                        movieTrailerFragment.pauseVideo();
                         draggablePanel.setVisibility(View.GONE);
                         draggablePanel.closeToLeft();
                     }
@@ -159,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
             case CLOSED_AT_RIGHT:
                 handler.postDelayed(new Runnable() {
                     @Override public void run() {
+                        movieTrailerFragment.pauseVideo();
                         draggablePanel.setVisibility(View.GONE);
                         draggablePanel.closeToRight();
                     }
@@ -168,6 +173,27 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
                 draggablePanel.setVisibility(View.GONE);
                 break;
         }
+    }
+
+
+    private void initDraggableViewListener() {
+        draggablePanel.setDraggableListener(new DraggableListener() {
+            @Override public void onMaximized() {
+                movieTrailerFragment.startVideo();
+            }
+
+            @Override public void onMinimized() {
+                //Do Nothing
+            }
+
+            @Override public void onClosedToLeft() {
+                movieTrailerFragment.pauseVideo();
+            }
+
+            @Override public void onClosedToRight() {
+                movieTrailerFragment.pauseVideo();
+            }
+        });
     }
 
     /**
