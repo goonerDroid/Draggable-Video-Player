@@ -12,6 +12,12 @@
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
+    <com.sublime.dragplayer.view.DraggablePanel
+    android:id="@+id/draggable_panel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+
 
 </FrameLayout>
 

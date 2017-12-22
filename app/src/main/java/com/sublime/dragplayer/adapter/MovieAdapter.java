@@ -60,7 +60,7 @@ public class MovieAdapter extends  RecyclerView.Adapter<MovieAdapter.ViewHolder>
     }
 
     //////////////Start of listeners////////////////////////////////////////////////////////////////
-    public void setLikeTripClickListener(OnItemClickListener onItemClickListener) {
+    public void setItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 

@@ -3,4 +3,8 @@
     <dimen name="album_cover_height">160dp</dimen>
     <dimen name="card_margin">5dp</dimen>
     <dimen name="album_title">15sp</dimen>
+    <dimen name="movie_trailer_fragment">325dp</dimen>
+    <dimen name="top_fragment_margin">10dp</dimen>
+    <item name="x_scale_factor" format="float" type="dimen">2.3</item>
+    <item name="y_scale_factor" format="float" type="dimen">2.3</item>
 </resources>
