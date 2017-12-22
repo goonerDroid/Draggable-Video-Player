@@ -12,7 +12,6 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.sublime.dragplayer.adapter.MovieAdapter;
 import com.sublime.dragplayer.model.Movie;
-import com.sublime.dragplayer.utils.Timber;
 import com.sublime.dragplayer.view.DraggableListener;
 import com.sublime.dragplayer.view.DraggablePanel;
 
@@ -265,5 +264,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         draggablePanel.maximize();
         movieTrailerFragment.showFragment(movie);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (draggablePanel.isMaximized()) draggablePanel.minimize();
+        else super.onBackPressed();
     }
 }
