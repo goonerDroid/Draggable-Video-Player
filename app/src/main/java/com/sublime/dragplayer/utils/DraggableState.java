@@ -1,4 +1,4 @@
-package com.sublime.dragplayer;
+package com.sublime.dragplayer.utils;
 
 import java.io.Serializable;
 

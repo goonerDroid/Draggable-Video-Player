@@ -1,4 +1,4 @@
-package com.sublime.dragplayer;
+package com.sublime.dragplayer.app;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,8 +10,13 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.sublime.dragplayer.R;
 import com.sublime.dragplayer.adapter.MovieAdapter;
+import com.sublime.dragplayer.fragments.MovieDetailFragment;
+import com.sublime.dragplayer.fragments.MovieTrailerFragment;
 import com.sublime.dragplayer.model.Movie;
+import com.sublime.dragplayer.service.PlayerService;
+import com.sublime.dragplayer.utils.DraggableState;
 import com.sublime.dragplayer.view.DraggableListener;
 import com.sublime.dragplayer.view.DraggablePanel;
 
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
     private MovieTrailerFragment movieTrailerFragment;
     private Movie movie;
     private MovieDetailFragment movieDetailFragment;
+    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         movieDetailFragment = new MovieDetailFragment();
         initDraggableViewListener();
         initializeDraggablePanel();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        PlayerService.checkServiceAndStart(this);
     }
 
     private void initializeDraggablePanel() {
@@ -268,7 +281,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
 
     @Override
     public void onBackPressed() {
-        if (draggablePanel.isMaximized()) draggablePanel.minimize();
-        else super.onBackPressed();
+       if (draggablePanel.isMinimized()){
+            super.onBackPressed();
+        }else if (draggablePanel.isMaximized()) {
+            draggablePanel.minimize();
+        }
     }
 }

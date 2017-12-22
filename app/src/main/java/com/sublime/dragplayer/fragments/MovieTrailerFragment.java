@@ -1,4 +1,4 @@
-package com.sublime.dragplayer;
+package com.sublime.dragplayer.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.sublime.dragplayer.R;
 import com.sublime.dragplayer.model.Movie;
 
 import butterknife.BindView;
