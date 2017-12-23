@@ -23,7 +23,6 @@ import com.sublime.dragplayer.fragments.MovieTrailerFragment;
 import com.sublime.dragplayer.model.Movie;
 import com.sublime.dragplayer.service.PlayerService;
 import com.sublime.dragplayer.utils.Preferences;
-import com.sublime.dragplayer.utils.Timber;
 import com.sublime.dragplayer.view.DraggableListener;
 import com.sublime.dragplayer.view.DraggablePanel;
 
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
     }
 
     private void launchPlayerService() {
-        if (preferences.isDrawPermissionGranted()) {
+        if (preferences.isDrawPermissionGranted() ) {
             startService(new Intent(this, PlayerService.class));
             finish();
         }
@@ -134,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
 
 
     private void initializeDraggablePanel() {
+        preferences.isVideoPlaying(false);
         draggablePanel.setFragmentManager(getSupportFragmentManager());
         draggablePanel.setTopFragment(movieTrailerFragment);
         draggablePanel.setBottomFragment(movieDetailFragment);
@@ -230,12 +230,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         if (preferences.isVideoPlaying())launchPlayerService();
     }
 
+
     @Override
     public void onBackPressed() {
-        Timber.wtf(""+preferences.isVideoPlaying());
-        if (!preferences.isVideoPlaying() || draggablePanel.isMinimized()){
+        if (!preferences.isVideoPlaying()){
+            preferences.isVideoPlaying(false);
             super.onBackPressed();
+            return;
         }
+        if (draggablePanel.isMinimized()) super.onBackPressed();
         if (draggablePanel.isMaximized()) draggablePanel.minimize();
     }
 }
