@@ -41,6 +41,13 @@ public class Preferences {
         editor.apply();
     }
 
+    public void isVideoPlaying(boolean isVideoPlaying) {
+        SharedPreferences prefs = context.getSharedPreferences("VIDEO_PREF", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("VIDEO_STATE", isVideoPlaying);
+        editor.apply();
+    }
+
 
 
     public String getMovieURI() {
@@ -51,8 +58,13 @@ public class Preferences {
         return context.getSharedPreferences("MOVIE_SEEK", MODE_PRIVATE).getInt("SEEK_COUNT",0);
     }
 
-    public boolean isDrawpermissionGranted() {
+    public boolean isDrawPermissionGranted() {
         return context.getSharedPreferences("PERMISSION_GRANTED", MODE_PRIVATE).getBoolean("DRAW_PERMISSION",false);
+    }
+
+
+    public boolean isVideoPlaying() {
+        return context.getSharedPreferences("VIDEO_PREF", MODE_PRIVATE).getBoolean("VIDEO_STATE",false);
     }
 
 
