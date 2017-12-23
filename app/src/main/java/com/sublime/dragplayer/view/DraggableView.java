@@ -636,7 +636,8 @@ public class DraggableView extends RelativeLayout {
    * Initialize the viewDragHelper.
    */
   private void initializeViewDragHelper() {
-    viewDragHelper = ViewDragHelper.create(this, SENSITIVITY, new DraggableViewCallback(this, dragView));
+    viewDragHelper = ViewDragHelper.create(this, SENSITIVITY, new
+            DraggableViewCallback(this, dragView));
   }
 
   /**

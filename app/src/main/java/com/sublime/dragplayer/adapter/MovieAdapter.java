@@ -59,7 +59,7 @@ public class MovieAdapter extends  RecyclerView.Adapter<MovieAdapter.ViewHolder>
         return movieDataList.size() * 2;
     }
 
-    //////////////Start of listeners////////////////////////////////////////////////////////////////
+    //////////////Start of listeners///////////
     public void setItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
@@ -101,10 +101,7 @@ public class MovieAdapter extends  RecyclerView.Adapter<MovieAdapter.ViewHolder>
         }
     }
 
-
     public interface OnItemClickListener {
-
         void onItemClick(Movie movie,View v, int adapterPosition);
-
     }
 }
