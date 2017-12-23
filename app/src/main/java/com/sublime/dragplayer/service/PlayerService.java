@@ -1,7 +1,7 @@
 package com.sublime.dragplayer.service;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.net.Uri;
@@ -26,47 +26,47 @@ import com.sublime.dragplayer.utils.Preferences;
 
 public class PlayerService extends Service {
 
-    public static boolean isRunning = false;
-    private WindowManager windowManager;
-    private View view;
+    private WindowManager mWindowManager;
+    private View mView;
 
+    @SuppressLint("InflateParams")
     @Override
     public void onCreate() {
         super.onCreate();
-        isRunning = true;
 
-        view = LayoutInflater.from(this).inflate(R.layout.popup_player_layout, null);
+        mView = LayoutInflater.from(this).inflate(R.layout.popup_player_layout, null);
+        Preferences preferences = new Preferences(this);
+        VideoView videoView = (VideoView) mView.findViewById(R.id.video_view);
+        if (!preferences.getMovieURI().isEmpty()) {//loads window if URI is present.
+            //Sets the window for the video layout.
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_TOAST,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+            params.gravity = Gravity.BOTTOM | Gravity.END;
+            params.x = 40;
+            params.y = 140;
 
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_TOAST,
 
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.BOTTOM | Gravity.END;
-        params.x = 40;
-        params.y = 140;
-        setClickListeners(view);
-        setDragListener(view,params);
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        if (windowManager !=null) windowManager.addView(view, params);
-        initVideo(view);
+            setClickListeners(mView);
+            setDragListener(mView, params);
+
+            mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+            if (mWindowManager != null) mWindowManager.addView(mView, params);
+
+            initVideo(videoView,preferences);
+        }
     }
 
-    private void initVideo(View view){
-        Preferences preferences = new Preferences(this);
-        VideoView videoView = view.findViewById(R.id.video_view);
-        if (!preferences.getMovieURI().isEmpty()) {
-            Uri path = Uri.parse(preferences.getMovieURI());
-            videoView.setVideoURI(path);
-            if (preferences.getMovieSeekCount() > 0) {
-                videoView.seekTo(preferences.getMovieSeekCount());
-            }
-            videoView.start();
-        }else{
-            stopSelf();
+    private void initVideo(VideoView videoView,Preferences preferences){
+        Uri path = Uri.parse(preferences.getMovieURI());
+        videoView.setVideoURI(path);
+        if (preferences.getMovieSeekCount() > 0) {//seeks to last watched seekcount
+            videoView.seekTo(preferences.getMovieSeekCount());
         }
+        videoView.start();
     }
 
     private void setDragListener(View view, final WindowManager.LayoutParams params) {
@@ -75,6 +75,7 @@ public class PlayerService extends Service {
             private int initialY;
             private float initialTouchX;
             private float initialTouchY;
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
@@ -87,11 +88,11 @@ public class PlayerService extends Service {
                         initialTouchY = event.getRawY();
                         return true;
                     case MotionEvent.ACTION_MOVE:
-                        //Calculate the X and Y coordinates of the view.
+                        //Calculate the X and Y coordinates of the mView.
                         params.x = initialX - (int) (event.getRawX() - initialTouchX);
                         params.y = initialY - (int) (event.getRawY() - initialTouchY);
                         //Update the layout with new X & Y coordinate
-                        windowManager.updateViewLayout(view, params);
+                        mWindowManager.updateViewLayout(view, params);
                         return true;
                 }
                 return false;
@@ -100,7 +101,7 @@ public class PlayerService extends Service {
     }
 
     private void setClickListeners(View view){
-        ImageView ivCloseView = view.findViewById(R.id.iv_close_view);
+        ImageView ivCloseView = (ImageView) view.findViewById(R.id.iv_close_view);
         ivCloseView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,7 +109,7 @@ public class PlayerService extends Service {
             }
         });
 
-        ImageView ivOpen = view.findViewById(R.id.iv_open);
+        ImageView ivOpen = (ImageView) view.findViewById(R.id.iv_open);
         ivOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,7 +131,6 @@ public class PlayerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (view != null)windowManager.removeView(view);
-        isRunning = false;
+        if (mView != null) mWindowManager.removeView(mView);
     }
 }
