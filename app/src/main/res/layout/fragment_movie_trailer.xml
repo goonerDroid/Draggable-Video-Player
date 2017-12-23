@@ -34,7 +34,8 @@
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_pause_white_36dp"/>
+                android:src="@drawable/ic_pause_white_36dp"
+                android:contentDescription="@string/pause_video" />
 
             <ImageView
                 android:id="@+id/iv_play"
@@ -42,7 +43,8 @@
                 android:layout_height="52dp"
                 android:layout_gravity="center"
                 android:visibility="invisible"
-                android:src="@drawable/ic_play_arrow_white_36dp"/>
+                android:src="@drawable/ic_play_arrow_white_36dp"
+                android:contentDescription="@string/play_video" />
 
 
         </FrameLayout>
