@@ -23,6 +23,7 @@ import com.sublime.dragplayer.fragments.MovieTrailerFragment;
 import com.sublime.dragplayer.model.Movie;
 import com.sublime.dragplayer.service.PlayerService;
 import com.sublime.dragplayer.utils.Preferences;
+import com.sublime.dragplayer.utils.Timber;
 import com.sublime.dragplayer.view.DraggableListener;
 import com.sublime.dragplayer.view.DraggablePanel;
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         preferences = new Preferences(this);
         initDraggableViewListener();
         initializeDraggablePanel();
-       if (!preferences.isDrawPermissionGranted()) manageDrawPermission();
+        if (!preferences.isDrawPermissionGranted()) manageDrawPermission();
     }
 
     private void manageDrawPermission() {
@@ -151,27 +152,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         draggablePanel.setTopFragmentMarginBottom(
                 getResources().getDimensionPixelSize(R.dimen.top_fragment_margin));
         draggablePanel.initializeView();
-        draggablePanel.setDraggableListener(new DraggableListener() {
-            @Override
-            public void onMaximized() {
-                preferences.isVideoPlaying(true);
-            }
-
-            @Override
-            public void onMinimized() {
-                preferences.isVideoPlaying(true);
-            }
-
-            @Override
-            public void onClosedToLeft() {
-                preferences.isVideoPlaying(false);
-            }
-
-            @Override
-            public void onClosedToRight() {
-                preferences.isVideoPlaying(false);
-            }
-        });
         draggablePanel.setVisibility(View.GONE);
     }
 
@@ -191,18 +171,21 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
     private void initDraggableViewListener() {
         draggablePanel.setDraggableListener(new DraggableListener() {
             @Override public void onMaximized() {
+                preferences.isVideoPlaying(true);
                 movieTrailerFragment.startVideo();
             }
 
             @Override public void onMinimized() {
-                //Do Nothing
+                preferences.isVideoPlaying(true);
             }
 
             @Override public void onClosedToLeft() {
+                preferences.isVideoPlaying(false);
                 movieTrailerFragment.pauseVideo();
             }
 
             @Override public void onClosedToRight() {
+                preferences.isVideoPlaying(false);
                 movieTrailerFragment.pauseVideo();
             }
         });
@@ -239,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         draggablePanel.setVisibility(View.VISIBLE);
         draggablePanel.maximize();
         movieTrailerFragment.showFragment(movie);
-        preferences.isVideoPlaying(true);
     }
 
     @Override
@@ -250,10 +232,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
 
     @Override
     public void onBackPressed() {
-       if (draggablePanel.isMinimized()){
+        Timber.wtf(""+preferences.isVideoPlaying());
+        if (!preferences.isVideoPlaying() || draggablePanel.isMinimized()){
             super.onBackPressed();
-        }else if (draggablePanel.isMaximized()) {
-            draggablePanel.minimize();
         }
+        if (draggablePanel.isMaximized()) draggablePanel.minimize();
     }
 }
