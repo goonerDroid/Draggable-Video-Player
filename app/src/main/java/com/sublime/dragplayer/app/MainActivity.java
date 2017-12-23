@@ -1,13 +1,20 @@
 package com.sublime.dragplayer.app;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.sublime.dragplayer.R;
@@ -17,6 +24,7 @@ import com.sublime.dragplayer.fragments.MovieTrailerFragment;
 import com.sublime.dragplayer.model.Movie;
 import com.sublime.dragplayer.service.PlayerService;
 import com.sublime.dragplayer.utils.DraggableState;
+import com.sublime.dragplayer.utils.Preferences;
 import com.sublime.dragplayer.view.DraggableListener;
 import com.sublime.dragplayer.view.DraggablePanel;
 
@@ -42,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
     private Movie movie;
     private MovieDetailFragment movieDetailFragment;
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+    private Preferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +63,79 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
         initMovieRecyclerView();
         movieTrailerFragment = new MovieTrailerFragment();
         movieDetailFragment = new MovieDetailFragment();
+        preferences = new Preferences(this);
         initDraggableViewListener();
         initializeDraggablePanel();
+       if (!preferences.isDrawpermissionGranted()) manageDrawPermission();
+    }
 
+    private void manageDrawPermission() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogStyle);
+        builder.setTitle("Alert");
+        builder.setCancelable(false);
+        builder.setMessage("We need permission to draw over other apps.");
+        builder.setPositiveButton("Okay",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Check if the application has draw over other apps permission or not?
+                        //This permission is by default available for API<23. But for API > 23
+                        //you have to ask for the permission in runtime.
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                                !Settings.canDrawOverlays(MainActivity.this)) {
+
+
+                            //If the draw over permission is not available open the settings screen
+                            //to grant the permission.
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                    Uri.parse("package:" + getPackageName()));
+                            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
+                        } else {
+                            preferences.isDrawPermissionGranted(true);
+                        }
+                    }
+                });
+        builder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(MainActivity.this,
+                                "Draw over other app permission not available. Closing the application",
+                                Toast.LENGTH_SHORT).show();
+
+                        finish();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void launchPlayerService() {
+        if (preferences.isDrawpermissionGranted()) {
+            startService(new Intent(this, PlayerService.class));
+            finish();
+        }
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        PlayerService.checkServiceAndStart(this);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
+            //Check if the permission is granted or not.
+            if (resultCode == 0) {
+                preferences.isDrawPermissionGranted(true);
+            } else { //Permission is not available
+                Toast.makeText(this,
+                        "Draw over other app permission not available. Closing the application",
+                        Toast.LENGTH_SHORT).show();
+
+                preferences.isDrawPermissionGranted(false);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
+
+
 
     private void initializeDraggablePanel() {
         draggablePanel.setFragmentManager(getSupportFragmentManager());
@@ -279,6 +351,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIt
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        launchPlayerService();
+    }
 
     @Override
     public void onBackPressed() {

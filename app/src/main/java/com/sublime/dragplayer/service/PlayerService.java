@@ -30,26 +30,13 @@ public class PlayerService extends Service {
     private WindowManager windowManager;
     private View view;
 
-    /**
-     * Static helper method to start the service if stopped
-     */
-    public static boolean checkServiceAndStart(Context context) {
-        if (!isRunning) {
-            context.startService(new Intent(context, PlayerService.class));
-            return false;
-        }
-        return true;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
         isRunning = true;
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.popup_player_layout, null);
-        initVideo(view);
+        view = LayoutInflater.from(this).inflate(R.layout.popup_player_layout, null);
+
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -62,19 +49,24 @@ public class PlayerService extends Service {
         params.y = 140;
         setClickListeners(view);
         setDragListener(view,params);
-
-        windowManager.addView(view, params);
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        if (windowManager !=null) windowManager.addView(view, params);
+        initVideo(view);
     }
 
     private void initVideo(View view){
-        Preferences preferences = new Preferences(getApplicationContext());
+        Preferences preferences = new Preferences(this);
         VideoView videoView = view.findViewById(R.id.video_view);
-        Uri path = Uri.parse(preferences.getMovieURI());
-        videoView.setVideoURI(path);
-        if (preferences.getMovieSeekCount() > 0){
-            videoView.seekTo(preferences.getMovieSeekCount());
+        if (!preferences.getMovieURI().isEmpty()) {
+            Uri path = Uri.parse(preferences.getMovieURI());
+            videoView.setVideoURI(path);
+            if (preferences.getMovieSeekCount() > 0) {
+                videoView.seekTo(preferences.getMovieSeekCount());
+            }
+            videoView.start();
+        }else{
+            stopSelf();
         }
-        videoView.start();
     }
 
     private void setDragListener(View view, final WindowManager.LayoutParams params) {
@@ -134,18 +126,11 @@ public class PlayerService extends Service {
         return null;
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) return super.onStartCommand(null, flags, startId);
-        return START_STICKY;
-    }
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        windowManager.removeView(view);
-        stopForeground(true);
+        if (view != null)windowManager.removeView(view);
         isRunning = false;
     }
 }
