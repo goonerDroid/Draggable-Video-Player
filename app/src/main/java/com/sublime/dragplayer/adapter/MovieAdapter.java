@@ -102,6 +102,6 @@ public class MovieAdapter extends  RecyclerView.Adapter<MovieAdapter.ViewHolder>
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Movie movie,View v, int adapterPosition);
+        void onItemClick(Movie movie, View v, int adapterPosition);
     }
 }
